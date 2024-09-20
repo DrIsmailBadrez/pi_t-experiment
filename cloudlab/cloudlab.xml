@@ -1,0 +1,148 @@
+<rspec xmlns="http://www.geni.net/resources/rspec/3" xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1">
+
+  <!-- Bulletin Board Node -->
+  <node client_id="bulletin_board" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh bulletin_board 0"/>
+    </services>
+  </node>
+
+  <!-- Relays -->
+  <!-- Relay 1 -->
+  <node client_id="relay1" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 1"/>
+    </services>
+  </node>
+
+  <!-- Relay 2 -->
+  <node client_id="relay2" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 2"/>
+    </services>
+  </node>
+
+  <!-- Relay 3 -->
+  <node client_id="relay3" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 3"/>
+    </services>
+  </node>
+
+  <!-- Relay 4 -->
+  <node client_id="relay4" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 4"/>
+    </services>
+  </node>
+
+  <!-- Relay 5 -->
+  <node client_id="relay5" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 5"/>
+    </services>
+  </node>
+
+  <!-- Relay 6 -->
+  <node client_id="relay6" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh relay 6"/>
+    </services>
+  </node>
+
+  <!-- Clients -->
+  <!-- Client 1 -->
+  <node client_id="client1" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 1"/>
+    </services>
+  </node>
+
+  <!-- Client 2 -->
+  <node client_id="client2" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 2"/>
+    </services>
+  </node>
+
+  <!-- Client 3 -->
+  <node client_id="client3" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 3"/>
+    </services>
+  </node>
+
+  <!-- Client 4 -->
+  <node client_id="client4" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 4"/>
+    </services>
+  </node>
+
+  <!-- Client 5 -->
+  <node client_id="client5" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 5"/>
+    </services>
+  </node>
+
+  <!-- Client 6 -->
+  <node client_id="client6" exclusive="true">
+    <hardware_type name="pc3000"/>
+    <install disk_image="urn:publicid:IDN+emulab.net+image+UBUNTU20-64-STD"/>
+    <services>
+      <execute shell="sh" command="sudo apt update && sudo apt install -y git golang prometheus yq"/>
+      <execute shell="sh" command="git clone git@github.com:DrIsmailBadrez/pi_t-experiment.git"/>
+      <execute shell="sh" command="cd pi_t-experiment && ./runNode.sh client 6"/>
+    </services>
+  </node>
+
+</rspec>
