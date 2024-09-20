@@ -35,7 +35,7 @@ def add_node_with_ip(node_id, node_type, role, index):
                                                         "cd pi_t-experiment && sudo git config --global --add safe.directory $HOME/pi_t-experiment"))
 
     # Command to run the services based on role and index
-    command = "cd pi_t-experiment && sudo ./bin/runNode.sh %s %d" % (role, index)
+    command = "cd pi_t-experiment && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh %s %d" % (role, index)
     node.addService(RSpec.Execute(shell="bash", command=command))
 
     # Fetch the node's IP address

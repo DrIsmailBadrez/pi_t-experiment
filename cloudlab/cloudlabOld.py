@@ -34,11 +34,9 @@ def add_node(node_id, node_type, role, index):
     node.addService(RSpec.Execute(shell="bash", command="sudo git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && "
                                                         "cd pi_t-experiment && sudo git config --global --add safe.directory $HOME/pi_t-experiment"))
 
-    # Set permissions and run the script
-    node.addService(RSpec.Execute(shell="bash", command="cd pi_t-experiment && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh"))
 
     # Command to run the services based on role and index
-    command = "cd pi_t-experiment && sudo ./bin/runNode.sh %s %d" % (role, index)
+    command = "cd pi_t-experiment && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh %s %d" % (role, index)
     node.addService(RSpec.Execute(shell="bash", command=command))
 
     return node
