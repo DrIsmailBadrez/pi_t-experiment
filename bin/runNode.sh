@@ -35,6 +35,8 @@ if [ -z "$PROJECT_ROOT" ]; then
     exit 1
 fi
 
+ls
+
 # Change to the project root directory
 cd "$PROJECT_ROOT" || { echo "Failed to change directory to $PROJECT_ROOT"; exit 1; }
 

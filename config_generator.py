@@ -1,3 +1,4 @@
+# config_generator.py
 import os
 
 # Function to generate config.yml with the fetched IP addresses

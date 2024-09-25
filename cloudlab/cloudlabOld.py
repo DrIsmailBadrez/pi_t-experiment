@@ -31,12 +31,11 @@ def add_node(node_id, node_type, role, index):
     node.addService(RSpec.Execute(shell="bash", command="sudo snap install yq"))
 
     # Clone the repo and set up safe directory handling
-    node.addService(RSpec.Execute(shell="bash", command="sudo git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && "
-                                                        "cd pi_t-experiment && sudo git config --global --add safe.directory $HOME/pi_t-experiment"))
-
+    node.addService(RSpec.Execute(shell="bash", command="cd $HOME && git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && "
+                                                       "cd $HOME/pi_t-experiment && git config --global --add safe.directory $HOME/pi_t-experiment"))
 
     # Command to run the services based on role and index
-    command = "cd pi_t-experiment && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh %s %d" % (role, index)
+    command = "cd $HOME/pi_t-experiment && ls && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh %s %d" % (role, index)
     node.addService(RSpec.Execute(shell="bash", command=command))
 
     return node
@@ -44,12 +43,12 @@ def add_node(node_id, node_type, role, index):
 # Bulletin Board Node
 add_node("bulletin_board", "pc3000", "bulletin_board", 0)
 
-# Relay Nodes (6 Relays)
-for i in range(1, 7):
+# Relay Nodes (1 Relay)
+for i in range(1, 2):
     add_node("relay%d" % i, "pc3000", "relay", i)
 
-# Client Nodes (6 Clients)
-for i in range(1, 7):
+# Client Nodes (1 Client)
+for i in range(1, 2):
     add_node("client%d" % i, "pc3000", "client", i)
 
 # Print the generated RSpec
