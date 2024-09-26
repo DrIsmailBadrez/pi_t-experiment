@@ -45,6 +45,8 @@ sudo ls ./config
 echo "Trying to open config file at: $CONFIG_FILE"
 ls -l $CONFIG_FILE
 
+sudo chown root:root /home/Ismail/pi_t-experiment/config/config.yml
+
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
     HOST=$(sudo yq e ".bulletin_board | .host" $CONFIG_FILE)
