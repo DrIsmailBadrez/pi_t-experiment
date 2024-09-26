@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the config.yml file
-CONFIG_FILE="pi_t-experiment/config/config.yml"
+CONFIG_FILE="config/config.yml"
 
 # Function to kill all processes started in the background
 terminate_processes() {
@@ -37,8 +37,10 @@ fi
 
 ls
 
-# Change to the project root directory
-cd "pi_t-experiment" || { echo "Failed to change directory to pi_t-experiment"; exit 1; }
+pwd
+
+# # Change to the project root directory
+# cd "pi_t-experiment" || { echo "Failed to change directory to pi_t-experiment"; exit 1; }
 
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
