@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the config.yml file
-CONFIG_FILE="./config.yml"
+CONFIG_FILE="/users/Ismail/pi_t-experiment/config/config.yml"
 
 # Function to kill all processes started in the background
 terminate_processes() {
