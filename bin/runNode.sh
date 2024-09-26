@@ -41,6 +41,12 @@ sudo pwd
 
 cd ./config
 
+sudo pwd
+sudo ls
+
+sudo chmod 644 $HOME/pi_t-experiment/config/config.yml
+sudo chmod 755 $HOME/pi_t-experiment/config
+
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
     HOST=$(sudo yq e ".bulletin_board | .host" $CONFIG_FILE)
