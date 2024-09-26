@@ -35,7 +35,7 @@ def add_node(node_id, node_type, role, index):
                                                        "cd $HOME/pi_t-experiment && git config --global --add safe.directory $HOME/pi_t-experiment"))
 
     # Command to run the services based on role and index
-    command = "cd $HOME/pi_t-experiment && ls && sudo chmod +x bin/runNode.sh && sudo ./bin/runNode.sh %s %d" % (role, index)
+    command = "cd $HOME/pi_t-experiment && ls && sudo chmod +x bin/runNode.sh && pwd && sudo ./bin/runNode.sh %s %d" % (role, index)
     node.addService(RSpec.Execute(shell="bash", command=command))
 
     return node
