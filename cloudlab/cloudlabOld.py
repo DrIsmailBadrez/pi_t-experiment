@@ -8,48 +8,68 @@ All nodes are configured to install required dependencies and automatically
 clone the pi_t-experiment repository to run their designated tasks.
 """
 import geni.portal as portal
-import geni.rspec.pg as RSpec
+import geni.rspec.pg as rspec
 
-# Create a request object to start building the RSpec
-request = RSpec.Request()
+# Create a Request object to start building the RSpec.
+request = portal.context.makeRequestRSpec()
 
-# Function to create a node with specific resources (cores, threads, RAM)
-def add_node(node_id, node_type, role, index):
-    node = request.RawPC(node_id)
-    node.hardware_type = node_type
-    node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU20-64-STD"
-
-    # Set resources for the node: 4 cores, 8 threads, and 8GB of RAM
-    node.cores = 4
-    node.threads = 8
-    node.ram = 8192  # 8GB of RAM
+# Create nodes with specific IP addresses manually assigned
+def add_node_with_ip(node_id, ip_address, subnet_mask="255.255.255.0", role=None, index=None):
+    node = request.RawPC(node_id)  # Create RawPC node
+    iface = node.addInterface("if1")  # Add an interface
+    iface.component_id = "eth1"  # Assign component ID
+    iface.addAddress(rspec.IPv4Address(ip_address, subnet_mask))  # Set IPv4 address
 
     # Install required packages and clone the GitHub repo
-    node.addService(RSpec.Execute(shell="bash", command="sudo apt update && sudo apt install -y git golang prometheus snapd"))
+    node.addService(rspec.Execute(shell="bash", command="sudo apt update && sudo apt install -y git golang prometheus snapd"))
 
     # Install yq via Snap
-    node.addService(RSpec.Execute(shell="bash", command="sudo snap install yq"))
+    node.addService(rspec.Execute(shell="bash", command="sudo snap install yq"))
 
     # Clone the repo and set up safe directory handling
-    node.addService(RSpec.Execute(shell="bash", command="cd $HOME && git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && "
-                                                       "cd $HOME/pi_t-experiment && git config --global --add safe.directory $HOME/pi_t-experiment"))
+    node.addService(rspec.Execute(shell="bash", command="sudo mkdir -p /home/Ismail/pi_t-experiment && sudo chown -R $USER /home/Ismail/pi_t-experiment && "
+                                                       "cd /home/Ismail && git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && "
+                                                       "cd /home/Ismail/pi_t-experiment && git config --global --add safe.directory /home/Ismail/pi_t-experiment"))
 
     # Command to run the services based on role and index
-    command = "cd $HOME/pi_t-experiment && ls && sudo chmod +x bin/runNode.sh && pwd && sudo ./bin/runNode.sh %s %d" % (role, index)
-    node.addService(RSpec.Execute(shell="bash", command=command))
+    if role and index is not None:
+        command = """
+        cd /home/Ismail/pi_t-experiment && sudo chmod +x bin/runNode.sh && pwd && ls /home/Ismail/pi_t-experiment/config &&
+        sudo ./bin/runNode.sh %s %d
+        """ % (role, index)
+        node.addService(rspec.Execute(shell="bash", command=command))
 
-    return node
+    return node, iface
 
-# Bulletin Board Node
-add_node("bulletin_board", "pc3000", "bulletin_board", 0)
+# Assign specific IP addresses for each node in the experiment
+bulletin_board_ip = "192.168.1.1"
+relay_ips = ["192.168.1.2", "192.168.1.3", "192.168.1.4", "192.168.1.5", "192.168.1.6", "192.168.1.7"]
+client_ips = ["192.168.1.8", "192.168.1.9", "192.168.1.10", "192.168.1.11", "192.168.1.12", "192.168.1.13"]
 
-# Relay Nodes (1 Relay)
-for i in range(1, 2):
-    add_node("relay%d" % i, "pc3000", "relay", i)
+# Create and configure nodes for the bulletin board, relays, and clients
+bulletin_board, bulletin_board_iface = add_node_with_ip("bulletin_board", bulletin_board_ip, role="bulletin_board", index=0)
 
-# Client Nodes (1 Client)
-for i in range(1, 2):
-    add_node("client%d" % i, "pc3000", "client", i)
+relays = []
+relay_ifaces = []
+for i, relay_ip in enumerate(relay_ips):
+    relay, relay_iface = add_node_with_ip(f"relay{i+1}", relay_ip, role="relay", index=i+1)
+    relays.append(relay)
+    relay_ifaces.append(relay_iface)
+
+clients = []
+client_ifaces = []
+for i, client_ip in enumerate(client_ips):
+    client, client_iface = add_node_with_ip(f"client{i+1}", client_ip, role="client", index=i+1)
+    clients.append(client)
+    client_ifaces.append(client_iface)
+
+# Create a LAN to connect all the nodes
+lan = request.LAN("lan")
+lan.addInterface(bulletin_board_iface)  # Add bulletin board to LAN
+for iface in relay_ifaces:  # Add relays to LAN
+    lan.addInterface(iface)
+for iface in client_ifaces:  # Add clients to LAN
+    lan.addInterface(iface)
 
 # Print the generated RSpec
-portal.context.printRequestRSpec(request)
+portal.context.printRequestRSpec()
