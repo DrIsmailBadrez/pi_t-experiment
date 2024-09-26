@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the config.yml file
-CONFIG_FILE="$HOME/pi_t-experiment/config.yml"
+CONFIG_FILE="$HOME/pi_t-experiment/config/config.yml"
 
 # Function to kill all processes started in the background
 terminate_processes() {
@@ -39,7 +39,11 @@ sudo ls
 
 sudo pwd
 
+echo "Printing content of ./config: "
 sudo ls ./config
+
+echo "Trying to open config file at: $CONFIG_FILE"
+ls -l $CONFIG_FILE
 
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
