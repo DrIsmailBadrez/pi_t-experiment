@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the config.yml file
-CONFIG_FILE="config/config.yml"
+CONFIG_FILE="$HOME/pi_t-experiment/config/config.yml"
 
 # Function to kill all processes started in the background
 terminate_processes() {
@@ -30,7 +30,7 @@ echo "Starting $type with ID: $id"
 # Find the root directory of the project by locating a known file or directory
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
 
-if [ -z "pi_t-experiment" ]; then
+if [ -z "$HOME/pi_t-experiment" ]; then
     echo "Error: Unable to determine the project root directory. Are you inside a Git repository?"
     exit 1
 fi
@@ -39,8 +39,9 @@ ls
 
 pwd
 
+ls ./config
 # # Change to the project root directory
-# cd "pi_t-experiment" || { echo "Failed to change directory to pi_t-experiment"; exit 1; }
+# cd "$HOME/pi_t-experiment" || { echo "Failed to change directory to $HOME/pi_t-experiment"; exit 1; }
 
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
