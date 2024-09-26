@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the config.yml file
-CONFIG_FILE="$HOME/pi_t-experiment/config/config.yml"
+CONFIG_FILE="./config.yml"
 
 # Function to kill all processes started in the background
 terminate_processes() {
@@ -39,7 +39,7 @@ sudo ls
 
 sudo pwd
 
-sudo ls ./config
+cd ./config
 
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
