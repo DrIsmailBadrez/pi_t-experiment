@@ -1,3 +1,12 @@
+"""
+Pi_t experiment deploying 6 clients, 6 relays, and 1 bulletin board across
+13 nodes. Each node runs a specific service, either a client, relay,
+or bulletin board.
+
+Instructions:
+All nodes are configured to install required dependencies and automatically
+clone the pi_t-experiment repository to run their designated tasks.
+"""
 import geni.portal as portal
 import geni.rspec.pg as RSpec
 
@@ -16,7 +25,9 @@ def add_node(node_id, node_type, role, index):
     # Install required packages and clone the GitHub repo
     node.addService(RSpec.Execute(shell="bash", command="sudo apt update && sudo apt install -y git golang prometheus snapd"))
     node.addService(RSpec.Execute(shell="bash", command="sudo snap install yq"))
-    node.addService(RSpec.Execute(shell="bash", command="cd $HOME && git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && cd $HOME/pi_t-experiment && git config --global --add safe.directory $HOME/pi_t-experiment"))
+
+    # Create the necessary directory and clone the repository
+    node.addService(RSpec.Execute(shell="bash", command="mkdir -p /home/Ismail/pi_t-experiment && cd /home/Ismail/ && git clone https://github.com/DrIsmailBadrez/pi_t-experiment.git && cd /home/Ismail/pi_t-experiment && git config --global --add safe.directory /home/Ismail/pi_t-experiment"))
 
     return node
 
@@ -29,14 +40,19 @@ relays = [add_node("relay%d" % i, "pc3000", "relay", i) for i in range(1, 7)]
 # Client nodes (assuming you want 6 clients)
 clients = [add_node("client%d" % i, "pc3000", "client", i) for i in range(1, 7)]
 
-# Function to dynamically create config file with the correct IP addresses
-def create_config_file():
-    # Get the IP addresses of the bulletin board, relays, and clients
-    bulletin_board_ip = bulletin_board.getInterfaces()[0].getIPv4()
-    relay_ips = [relay.getInterfaces()[0].getIPv4() for relay in relays]
-    client_ips = [client.getInterfaces()[0].getIPv4() for client in clients]
+# Function to create a startup script to collect IP addresses and generate config files
+def create_startup_script(role, index):
+    return """
+#!/bin/bash
 
-    config_content = f"""
+# Wait for the node to fully boot and get an IP address
+sleep 30
+
+# Get the IP address of this node
+ip_addr=$(hostname -I | awk '{print $1}')
+
+# Create configuration content dynamically
+config_content=\"
 l1: 3
 l2: 2
 x: 25
@@ -53,28 +69,42 @@ metrics:
   host: 'localhost'
   port: 8200
 bulletin_board:
-  host: '{bulletin_board_ip}'
+  host: '$ip_addr'
   port: 8080
 clients:
-"""
-    for i, client_ip in enumerate(client_ips):
-        config_content += f"  - id: {i+1}\n    host: '{client_ip}'\n    port: {8100 + i + 1}\n    prometheus_port: {9100 + i + 1}\n"
+  - id: 1
+    host: '$ip_addr'
+    port: 8101
+    prometheus_port: 9101
+relays:
+  - id: 1
+    host: '$ip_addr'
+    port: 8081
+    prometheus_port: 9201
+\"
 
-    config_content += "\nrelays:\n"
-    for i, relay_ip in enumerate(relay_ips):
-        config_content += f"  - id: {i+1}\n    host: '{relay_ip}'\n    port: {8080 + i + 1}\n    prometheus_port: {9200 + i + 1}\n"
+# Write the config file to the appropriate directory
+mkdir -p /home/Ismail/pi_t-experiment/config
+echo "$config_content" > /home/Ismail/pi_t-experiment/config/config.yml
 
-    return config_content
+# Run the node's role-specific service
+cd /home/Ismail/pi_t-experiment
+sudo chmod +x bin/runNode.sh
+sudo ./bin/runNode.sh %s %d
+""" % (role, index)
 
-# Once the IP addresses are gathered, generate the config file and send it to all nodes
-config_file_content = create_config_file()
+# Add the startup script to each node
+for index, node in enumerate([bulletin_board] + relays + clients):
+    # Determine the role based on the node type
+    if node == bulletin_board:
+        role = "bulletin_board"
+    elif node in relays:
+        role = "relay"
+    else:
+        role = "client"
 
-# Write the config file to each node dynamically
-for node in [bulletin_board] + relays + clients:
-    node.addService(RSpec.Execute(shell="bash", command=f"echo '{config_file_content}' > $HOME/pi_t-experiment/config/config.yml"))
-        # Command to run the services based on role and index
-    command = "cd $HOME/pi_t-experiment && ls && sudo chmod +x bin/runNode.sh && pwd && ls $HOME/pi_t-experiment/config && sudo ./bin/runNode.sh %s %d" % (role, index)
-    node.addService(RSpec.Execute(shell="bash", command=command))
+    # Add the startup script to the node
+    node.addService(RSpec.Execute(shell="bash", command=create_startup_script(role, index)))
 
 # Print the generated RSpec
 portal.context.printRequestRSpec(request)
