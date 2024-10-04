@@ -2,17 +2,18 @@ package metrics
 
 import (
 	"fmt"
-	pl "github.com/HannahMarsh/PrettyLogger"
-	"github.com/HannahMarsh/pi_t-experiment/config"
-	"github.com/HannahMarsh/pi_t-experiment/internal/api/structs"
-	"github.com/ilyakaznacheev/cleanenv"
-	"gopkg.in/yaml.v3"
 	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sync"
+
+	pl "github.com/HannahMarsh/PrettyLogger"
+	"github.com/HannahMarsh/pi_t-experiment/config"
+	"github.com/HannahMarsh/pi_t-experiment/internal/api/structs"
+	"github.com/ilyakaznacheev/cleanenv"
+	"gopkg.in/yaml.v3"
 )
 
 type Global struct {
@@ -82,27 +83,33 @@ func RestartPrometheus(relays, clients []structs.PublicNodeApi) error {
 	}
 
 	for _, client := range clients {
+		target := fmt.Sprintf("%s:%d", client.Host, client.PrometheusPort)
 		promCfg_.ScrapeConfigs = append(promCfg_.ScrapeConfigs, ScrapeConfig{
 			JobName:        fmt.Sprintf("client-%d", client.ID),
 			ScrapeInterval: "5s",
 			StaticConfigs: []StaticConfig{
 				{
-					Targets: []string{fmt.Sprintf("%s:%d", client.Host, client.PrometheusPort)},
+					Targets: []string{target},
 				},
 			},
 		})
+		// log added scrape target
+		fmt.Printf("Added a Client scraper for IP: %s and port: %d\n", client.Host, client.PrometheusPort)
 	}
 
 	for _, relay := range relays {
+		target := fmt.Sprintf("%s:%d", relay.Host, relay.PrometheusPort)
 		promCfg_.ScrapeConfigs = append(promCfg_.ScrapeConfigs, ScrapeConfig{
 			JobName:        fmt.Sprintf("relay-%d", relay.ID),
 			ScrapeInterval: "5s",
 			StaticConfigs: []StaticConfig{
 				{
-					Targets: []string{fmt.Sprintf("%s:%d", relay.Host, relay.PrometheusPort)},
+					Targets: []string{target},
 				},
 			},
 		})
+		// log added scrape target
+		fmt.Printf("Added a Relay scraper for IP: %s and port: %d\n", relay.Host, relay.PrometheusPort)
 	}
 
 	// Marshal the struct into YAML format
