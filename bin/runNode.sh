@@ -6,7 +6,8 @@ CONFIG_FILE="/home/Ismail/pi_t-experiment/config/config.yml"
 # Function to kill all processes started in the background
 terminate_processes() {
     echo "Terminating process..."
-    sudo curl -X POST "$ADDRESS/shutdown" > /dev/null 2>&1
+    # If you're using an address for shutdown, uncomment the following line.
+    # sudo curl -X POST "$ADDRESS/shutdown" > /dev/null 2>&1
     sudo kill -9 $SCRIPT_PID
     exit 0
 }
@@ -30,71 +31,52 @@ echo "Starting $type with ID: $id"
 # Find the root directory of the project by locating a known file or directory
 PROJECT_ROOT="$(sudo git rev-parse --show-toplevel 2>/dev/null)"
 
-if [ -z "$HOME/pi_t-experiment" ]; then
+if [ -z "$PROJECT_ROOT" ]; then
     echo "Error: Unable to determine the project root directory. Are you inside a Git repository?"
     exit 1
 fi
 
-sudo ls
+# Change directory to project root
+cd "$PROJECT_ROOT" || exit 1
 
-sudo pwd
-
-echo "Printing content of ./config: "
-sudo ls ./config
+# Print the contents of the config directory for verification
+echo "Printing content of ./config:"
+ls ./config
 
 echo "Trying to open config file at: $CONFIG_FILE"
 ls -l $CONFIG_FILE
 
-sudo chown root:root /home/Ismail/pi_t-experiment/config/config.yml
+# Ensure correct permissions for the config file
+sudo chown root:root "$CONFIG_FILE"
 
 # Handle Bulletin Board
 if [ "$type" = "bulletin_board" ]; then
-    HOST=$(sudo yq e ".bulletin_board | .host" $CONFIG_FILE)
-    PORT=$(sudo yq e ".bulletin_board | .port" $CONFIG_FILE)
-
-    if [ -z "$HOST" ] || [ -z "$PORT" ]; then
-        echo "Bulletin board not found in the configuration."
-        exit 1
-    fi
-
-    ADDRESS="http://$HOST:$PORT"
-
-    echo "Bulletin board address: $ADDRESS"
+    echo "Starting bulletin board..."
 
     # Start the bulletin board process in the background
     sudo go run cmd/bulletin-board/main.go &
     SCRIPT_PID=$!
 
 elif [ "$type" = "client" ]; then
-    HOST=$(sudo yq e ".clients[] | select(.id == $id) | .host" $CONFIG_FILE)
-    PORT=$(sudo yq e ".clients[] | select(.id == $id) | .port" $CONFIG_FILE)
+    echo "Starting client $id..."
 
-    if [ -z "$HOST" ] || [ -z "$PORT" ]; then
-        echo "Client with ID $id not found in the configuration."
-        exit 1
-    fi
-
-    ADDRESS="http://$HOST:$PORT"
-    echo "Client $id address: $ADDRESS"
-
-    # Start the client process in the background
+    # Start the client process in the background without host or port
     sudo go run cmd/client/main.go -id "$id" &
     SCRIPT_PID=$!
 
 elif [ "$type" = "relay" ]; then
-    HOST=$(sudo yq e ".relays[] | select(.id == $id) | .host" $CONFIG_FILE)
-    PORT=$(sudo yq e ".relays[] | select(.id == $id) | .port" $CONFIG_FILE)
+    echo "Starting relay $id..."
 
-    if [ -z "$HOST" ] || [ -z "$PORT" ]; then
-        echo "Relay with ID $id not found in the configuration."
+    # Retrieve the bulletin board host from the config file
+    BULLETIN_BOARD_HOST=$(sudo yq e ".bulletin_board.host" "$CONFIG_FILE")
+
+    if [ -z "$BULLETIN_BOARD_HOST" ]; then
+        echo "Bulletin board configuration not found."
         exit 1
     fi
 
-    ADDRESS="http://$HOST:$PORT"
-    echo "Relay $id address: $ADDRESS"
-
-    # Start the relay process in the background
-    sudo go run cmd/relay/main.go -id "$id" &
+    # Start the relay process in the background with the bulletin board host
+    sudo go run cmd/relay/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" &
     SCRIPT_PID=$!
 else
     echo "Invalid type: $type. Must be 'client', 'relay', or 'bulletin_board'."
