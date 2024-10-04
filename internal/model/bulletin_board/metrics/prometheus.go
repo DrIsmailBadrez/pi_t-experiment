@@ -46,6 +46,18 @@ var mu = &sync.Mutex{}
 func RestartPrometheus(relays, clients []structs.PublicNodeApi) error {
 	path := ""
 
+	// Debug output for clients
+	fmt.Printf("Number of clients: %d\n", len(clients))
+	for _, client := range clients {
+		fmt.Printf("Client: ID: %d, Host: %s, Port: %d\n", client.ID, client.Host, client.PrometheusPort)
+	}
+
+	// Debug output for relays
+	fmt.Printf("Number of relays: %d\n", len(relays))
+	for _, relay := range relays {
+		fmt.Printf("Relay: ID: %d, Host: %s, Port: %d\n", relay.ID, relay.Host, relay.PrometheusPort)
+	}
+
 	promCfg := &PromConfig{}
 
 	if dir, err := os.Getwd(); err != nil {
