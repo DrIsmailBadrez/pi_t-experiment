@@ -2,10 +2,11 @@ package utils
 
 import (
 	"encoding/json"
-	pl "github.com/HannahMarsh/PrettyLogger"
 	"io"
 	"log/slog"
 	"net/http"
+
+	pl "github.com/HannahMarsh/PrettyLogger"
 )
 
 type PublicIP struct {
@@ -36,5 +37,7 @@ func GetPublicIP() (*PublicIP, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&ip); err != nil {
 		return nil, pl.WrapError(err, "failed to decode public IP")
 	}
+	// Print the retrieved IP address
+	slog.Info("Retrieved public IP", "IP", ip.IP)
 	return &ip, nil
 }
