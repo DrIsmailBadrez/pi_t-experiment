@@ -53,17 +53,17 @@ func main() {
 		os.Exit(2)
 	}
 
-	if ip == "x" {
-		IP, err := utils.GetPublicIP()
-		if err != nil {
-			slog.Error("failed to get public IP", err)
-			os.Exit(1)
-		}
-		slog.Info("", "IP", IP.IP, "Hostname", IP.HostName, "City", IP.City, "Region", IP.Region, "Country", IP.Country, "Location", IP.Location, "Org", IP.Org, "Postal", IP.Postal, "Timezone", IP.Timezone, "ReadMe", IP.ReadMe)
-		ip = IP.IP
-		// Log the retrieved public IP
-		fmt.Printf("Retrieved public IP: %s\n", IP.IP)
+	// if ip == "x" {
+	IP, err := utils.GetPublicIP()
+	if err != nil {
+		slog.Error("failed to get public IP", err)
+		os.Exit(1)
 	}
+	slog.Info("", "IP", IP.IP, "Hostname", IP.HostName, "City", IP.City, "Region", IP.Region, "Country", IP.Country, "Location", IP.Location, "Org", IP.Org, "Postal", IP.Postal, "Timezone", IP.Timezone, "ReadMe", IP.ReadMe)
+	ip = IP.IP
+	// Log the retrieved public IP
+	fmt.Printf("Retrieved public IP: %s\n", IP.IP)
+	// }
 
 	// Automatically adjust the GOMAXPROCS setting based on the number of available CPU cores.
 	if _, err := maxprocs.Set(); err != nil {
