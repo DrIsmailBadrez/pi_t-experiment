@@ -60,10 +60,17 @@ if [ "$type" = "bulletin_board" ]; then
 elif [ "$type" = "client" ]; then
     echo "Starting client $id..."
 
-    # Start the client process in the background without host or port
-    sudo go run cmd/client/main.go -id "$id" &
-    SCRIPT_PID=$!
+    # Retrieve the bulletin board host from the config file
+    BULLETIN_BOARD_HOST=$(sudo yq e ".bulletin_board.host" "$CONFIG_FILE")
 
+    if [ -z "$BULLETIN_BOARD_HOST" ]; then
+        echo "Bulletin board configuration not found."
+        exit 1
+    fi
+
+    # Start the client process in the background with the bulletin board host
+    sudo go run cmd/client/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" &
+    SCRIPT_PID=$!
 elif [ "$type" = "relay" ]; then
     echo "Starting relay $id..."
 
