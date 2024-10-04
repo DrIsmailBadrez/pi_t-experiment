@@ -18,4 +18,4 @@ if [ ! -f "$CONFIG_FILE" ]; then
 fi
 
 # Start Prometheus using the configuration file
-/opt/homebrew/bin/prometheus --config.file="$CONFIG_FILE"
+/usr/bin/prometheus --config.file="$CONFIG_FILE"
