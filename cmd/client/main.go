@@ -53,6 +53,9 @@ func main() {
 		os.Exit(2)
 	}
 
+	// Value of ip before
+	fmt.Printf("Initial value of IP: %s\n", ip)
+
 	// if ip == "x" {
 	IP, err := utils.GetPublicIP()
 	if err != nil {
