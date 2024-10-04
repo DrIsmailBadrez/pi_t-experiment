@@ -4,18 +4,19 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	pl "github.com/HannahMarsh/PrettyLogger"
-	"github.com/HannahMarsh/pi_t-experiment/config"
-	"github.com/HannahMarsh/pi_t-experiment/internal/metrics"
-	"github.com/HannahMarsh/pi_t-experiment/internal/model/client"
-	"github.com/HannahMarsh/pi_t-experiment/pkg/utils"
-	"go.uber.org/automaxprocs/maxprocs"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	pl "github.com/HannahMarsh/PrettyLogger"
+	"github.com/HannahMarsh/pi_t-experiment/config"
+	"github.com/HannahMarsh/pi_t-experiment/internal/metrics"
+	"github.com/HannahMarsh/pi_t-experiment/internal/model/client"
+	"github.com/HannahMarsh/pi_t-experiment/pkg/utils"
+	"go.uber.org/automaxprocs/maxprocs"
 
 	_ "github.com/lib/pq"
 )
@@ -60,6 +61,8 @@ func main() {
 		}
 		slog.Info("", "IP", IP.IP, "Hostname", IP.HostName, "City", IP.City, "Region", IP.Region, "Country", IP.Country, "Location", IP.Location, "Org", IP.Org, "Postal", IP.Postal, "Timezone", IP.Timezone, "ReadMe", IP.ReadMe)
 		ip = IP.IP
+		// Log the retrieved public IP
+		fmt.Printf("Retrieved public IP: %s\n", IP.IP)
 	}
 
 	// Automatically adjust the GOMAXPROCS setting based on the number of available CPU cores.
