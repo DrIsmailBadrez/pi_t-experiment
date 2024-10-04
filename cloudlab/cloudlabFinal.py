@@ -16,12 +16,19 @@ request = portal.context.makeRequestRSpec()
 # Create nodes with specific IP addresses manually assigned
 def add_node_with_ip(node_id, ip_address, subnet_mask="255.255.255.0", role=None, index=None):
     node = request.RawPC(node_id)  # Create RawPC node
+    # Set resources for the node: 4 cores, 8 threads, and 8GB of RAM
+    node.cores = 4
+    node.threads = 8
+    node.ram = 8192  # 8GB of RAM
     iface = node.addInterface("if1")  # Add an interface
     iface.component_id = "eth1"  # Assign component ID
     iface.addAddress(rspec.IPv4Address(ip_address, subnet_mask))  # Set IPv4 address
 
-    # Install required packages and clone the GitHub repo
-    node.addService(rspec.Execute(shell="bash", command="sudo apt update && sudo apt install -y git golang prometheus snapd"))
+    # Install required packages (excluding Go from apt, using Snap instead)
+    node.addService(rspec.Execute(shell="bash", command="sudo apt update && sudo apt install -y git prometheus snapd"))
+
+    # Install the latest version of Go via Snap
+    node.addService(rspec.Execute(shell="bash", command="sudo snap install go --classic"))
 
     # Install yq via Snap
     node.addService(rspec.Execute(shell="bash", command="sudo snap install yq"))
@@ -52,14 +59,14 @@ bulletin_board, bulletin_board_iface = add_node_with_ip("bulletin_board", bullet
 relays = []
 relay_ifaces = []
 for i, relay_ip in enumerate(relay_ips):
-    relay, relay_iface = add_node_with_ip(f"relay{i+1}", relay_ip, role="relay", index=i+1)
+    relay, relay_iface = add_node_with_ip("relay%d" % (i + 1), relay_ip, role="relay", index=i+1)
     relays.append(relay)
     relay_ifaces.append(relay_iface)
 
 clients = []
 client_ifaces = []
 for i, client_ip in enumerate(client_ips):
-    client, client_iface = add_node_with_ip(f"client{i+1}", client_ip, role="client", index=i+1)
+    client, client_iface = add_node_with_ip("client%d" % (i + 1), client_ip, role="client", index=i+1)
     clients.append(client)
     client_ifaces.append(client_iface)
 
