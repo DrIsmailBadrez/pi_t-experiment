@@ -44,7 +44,6 @@ var PID int
 var mu = &sync.Mutex{}
 
 func RestartPrometheus(relays, clients []structs.PublicNodeApi) error {
-
 	path := ""
 
 	promCfg := &PromConfig{}
@@ -52,8 +51,6 @@ func RestartPrometheus(relays, clients []structs.PublicNodeApi) error {
 	if dir, err := os.Getwd(); err != nil {
 		return pl.WrapError(err, "config.NewConfig(): global config error")
 	} else if err2 := cleanenv.ReadConfig(dir+"/internal/model/bulletin_board/metrics/prometheus.yml", promCfg); err2 != nil {
-
-		// Get the absolute path of the current file
 		_, currentFile, _, ok := runtime.Caller(0)
 		if !ok {
 			return pl.NewError("Failed to get current file path")
@@ -139,8 +136,14 @@ func RestartPrometheus(relays, clients []structs.PublicNodeApi) error {
 
 	slog.Info("prometheus config written to file", "path", path)
 
-	// Sop Prometheus
+	// rint the content of the config file
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return pl.WrapError(err, "failed to read prometheus config file")
+	}
+	fmt.Printf("Prometheus Config File Content:\n%s\n", content)
 
+	// Stop Prometheus
 	if err := StopPrometheus(); err != nil {
 		return pl.WrapError(err, "failed to stop Prometheus")
 	}
