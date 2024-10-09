@@ -64,4 +64,4 @@ scrape_configs:
         - targets:
             - localhost:8200
 rule_files:
-    - /Users/hanma/Documents/GitHub/pi_t-experiment/internal/model/bulletin_board/metrics/rules.yml
+    - /home/Ismail/pi_t-experiment/internal/model/bulletin_board/metrics/rules.yml

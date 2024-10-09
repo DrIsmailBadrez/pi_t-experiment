@@ -25,8 +25,8 @@ func main() {
 	// Define command-line flags
 	id_ := flag.Int("id", -1, "ID of the newClient (required)")
 	ip_ := flag.String("host", "x", "IP address of the client")
-	port_ := flag.Int("port", 0, "Port of the client")
-	promPort_ := flag.Int("promPort", 0, "Port of the client's Prometheus metrics")
+	port_ := flag.Int("port", 8080, "Port of the client")
+	promPort_ := flag.Int("promPort", 8200, "Port of the client's Prometheus metrics")
 	logLevel_ := flag.String("log-level", "debug", "Log level")
 
 	flag.Usage = func() {
