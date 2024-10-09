@@ -3,63 +3,65 @@ global:
     external_labels:
         monitor: pi_t
 scrape_configs:
-    - job_name: client-3
-      scrape_interval: 5s
-      static_configs:
-        - targets:
-            - 192.168.1.10:8200
-    - job_name: client-4
-      scrape_interval: 5s
-      static_configs:
-        - targets:
-            - 192.168.1.11:8200
-    - job_name: client-5
-      scrape_interval: 5s
-      static_configs:
-        - targets:
-            - 192.168.1.12:8200
     - job_name: client-6
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.13:8200
+            - localhost:8200
     - job_name: client-1
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.8:8200
+            - localhost:8200
     - job_name: client-2
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.9:8200
-    - job_name: relay-4
+            - localhost:8200
+    - job_name: client-3
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.5:8200
-    - job_name: relay-5
+            - localhost:8200
+    - job_name: client-4
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.6:8200
+            - localhost:8200
+    - job_name: client-5
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:8200
     - job_name: relay-6
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.7:8200
+            - localhost:8200
     - job_name: relay-1
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.2:8200
+            - localhost:8200
     - job_name: relay-2
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.3:8200
+            - localhost:8200
     - job_name: relay-3
       scrape_interval: 5s
       static_configs:
         - targets:
-            - 192.168.1.4:8200
+            - localhost:8200
+    - job_name: relay-4
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:8200
+    - job_name: relay-5
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:8200
+rule_files:
+    - /Users/hanma/Documents/GitHub/pi_t-experiment/internal/model/bulletin_board/metrics/rules.yml

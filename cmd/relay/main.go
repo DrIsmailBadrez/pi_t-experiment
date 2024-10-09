@@ -53,8 +53,23 @@ func main() {
 		os.Exit(2)
 	}
 
-	// Value of ip before
-	fmt.Printf("Initial value of IP: %s\n", ip)
+	if port == 0 {
+		var err error
+		port, err = utils.GetAvailablePort()
+		if err != nil {
+			slog.Error("failed to get available port", err)
+			os.Exit(1)
+		}
+	}
+
+	if promPort == 0 {
+		var err error
+		promPort, err = utils.GetAvailablePort()
+		if err != nil {
+			slog.Error("failed to get available port", err)
+			os.Exit(1)
+		}
+	}
 
 	// if ip == "x" {
 	IP, err := utils.GetPublicIP()
