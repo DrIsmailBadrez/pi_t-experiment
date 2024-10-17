@@ -1,5 +1,5 @@
-N: 6 # minimum number of clients before running protocol
-n: 6 # minimum number of relays before running protocol
+N: 100 # minimum number of clients before running protocol
+n: 50 # minimum number of relays before running protocol
 l1: 3         # Number of planned mixers in a routing path
 l2: 2         # Number of planned gatekeepers in a routing path
 x: 25         # Server load (x = Ω(polylog λ)) i.e. the expected number of onions per intermediary hop
