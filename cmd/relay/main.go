@@ -4,14 +4,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-<<<<<<< HEAD
-=======
-	pl "github.com/HannahMarsh/PrettyLogger"
-	"github.com/HannahMarsh/pi_t-experiment/config"
-	"github.com/HannahMarsh/pi_t-experiment/internal/model/relay"
-	"github.com/HannahMarsh/pi_t-experiment/pkg/utils"
-	"go.uber.org/automaxprocs/maxprocs"
->>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
 	"log/slog"
 	"net/http"
 	"os"
@@ -21,7 +13,6 @@ import (
 
 	pl "github.com/HannahMarsh/PrettyLogger"
 	"github.com/HannahMarsh/pi_t-experiment/config"
-	"github.com/HannahMarsh/pi_t-experiment/internal/metrics"
 	"github.com/HannahMarsh/pi_t-experiment/internal/model/relay"
 	"github.com/HannahMarsh/pi_t-experiment/pkg/utils"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -37,15 +28,9 @@ func main() {
 	// Define command-line flags
 	id_ := flag.Int("id", -1, "ID of the newClient (required)")
 	ip_ := flag.String("host", "x", "IP address of the relay")
-<<<<<<< HEAD
 	port_ := flag.Int("port", 8080, "Port of the client")
 	promPort_ := flag.Int("promPort", 8200, "Port of the relay's Prometheus metrics")
 	logLevel_ := flag.String("log-level", "debug", "Log level")
-=======
-	port_ := flag.Int("port", 0, "Port of the client")
-	promPort_ := flag.Int("promPort", 0, "Port of the relay's Prometheus metrics")
-	logLevel_ := flag.String("log-level", "info", "Log level")
->>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
 
 	flag.Usage = func() {
 		if _, err := fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0]); err != nil {
