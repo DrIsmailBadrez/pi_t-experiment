@@ -1,6 +1,6 @@
 """
-Pi_t experiment deploying 6 clients, 6 relays, and 1 bulletin board across
-13 nodes. Each node runs a specific service, either a client, relay,
+Pi_t experiment deploying 100 clients, 50 relays, and 1 bulletin board across
+151 nodes. Each node runs a specific service, either a client, relay,
 or bulletin board.
 
 Instructions:
@@ -48,6 +48,9 @@ def add_node_with_ip(node_id, ip_address, subnet_mask="255.255.255.0", role=None
     node.addService(rspec.Execute(shell="bash", command=prometheus_install_command))
 
     # Verify Prometheus installation and version
+
+    node.addService(rspec.Execute(shell="bash", command="which prometheus"))
+
     node.addService(rspec.Execute(shell="bash", command="/usr/bin/prometheus --version"))
 
     # Clone the repo and set up safe directory handling
@@ -65,18 +68,10 @@ def add_node_with_ip(node_id, ip_address, subnet_mask="255.255.255.0", role=None
 
     return node, iface
 
-# Assign IP addresses
-bulletin_board_ip = "192.168.1.1"
-relay_ips = ["192.168.1.2", "192.168.1.3", "192.168.1.4", "192.168.1.5", "192.168.1.6", "192.168.1.7"]
-client_ips = ["192.168.1.8", "192.168.1.9", "192.168.1.10", "192.168.1.11", "192.168.1.12", "192.168.1.13"]
-
-# Create and configure nodes for the bulletin board
-bulletin_board, bulletin_board_iface = add_node_with_ip("bulletin_board", bulletin_board_ip, role="bulletin_board", index=0)
-
 # Create relays
 relays = []
 relay_ifaces = []
-for i, relay_ip in enumerate(relay_ips):
+for i, relay_ip in enumerate(7, 25):
     relay, relay_iface = add_node_with_ip("relay%d" % (i + 1), relay_ip, role="relay", index=i + 1)
     relays.append(relay)
     relay_ifaces.append(relay_iface)
@@ -84,21 +79,10 @@ for i, relay_ip in enumerate(relay_ips):
 # Create clients
 clients = []
 client_ifaces = []
-for i, client_ip in enumerate(client_ips):
+for i, client_ip in enumerate(7, 37):
     client, client_iface = add_node_with_ip("client%d" % (i + 1), client_ip, role="client", index=i + 1)
     clients.append(client)
     client_ifaces.append(client_iface)
-
-# Create a LAN to connect all the nodes
-lan = request.LAN("lan")
-# Add bulletin board to LAN
-lan.addInterface(bulletin_board_iface)
-# Add relays to LAN
-for iface in relay_ifaces:
-    lan.addInterface(iface)
-# Add clients to LAN
-for iface in client_ifaces:
-    lan.addInterface(iface)
 
 # Print the generated RSpec
 portal.context.printRequestRSpec()
