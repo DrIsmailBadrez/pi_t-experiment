@@ -7,61 +7,110 @@ scrape_configs:
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52517
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: client-1
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52469
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: client-2
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52478
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: client-3
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52490
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: client-4
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52499
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: client-5
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
     - job_name: relay-6
       scrape_interval: 5s
       static_configs:
         - targets:
             - localhost:8200
+=======
+            - localhost:52508
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: relay-1
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52526
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: relay-2
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52538
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: relay-3
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52547
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: relay-4
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52556
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
     - job_name: relay-5
       scrape_interval: 5s
       static_configs:
         - targets:
+<<<<<<< HEAD
             - localhost:8200
+=======
+            - localhost:52565
+    - job_name: relay-6
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:52574
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
 rule_files:
     - /home/Ismail/pi_t-experiment/internal/model/bulletin_board/metrics/rules.yml

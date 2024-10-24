@@ -4,6 +4,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+<<<<<<< HEAD
+=======
+	pl "github.com/HannahMarsh/PrettyLogger"
+	"github.com/HannahMarsh/pi_t-experiment/config"
+	"github.com/HannahMarsh/pi_t-experiment/internal/model/relay"
+	"github.com/HannahMarsh/pi_t-experiment/pkg/utils"
+	"go.uber.org/automaxprocs/maxprocs"
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
 	"log/slog"
 	"net/http"
 	"os"
@@ -21,13 +29,23 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var stopNTC func()
+var newRelay *relay.Relay
+var shutdownMetrics func()
+
 func main() {
 	// Define command-line flags
 	id_ := flag.Int("id", -1, "ID of the newClient (required)")
 	ip_ := flag.String("host", "x", "IP address of the relay")
+<<<<<<< HEAD
 	port_ := flag.Int("port", 8080, "Port of the client")
 	promPort_ := flag.Int("promPort", 8200, "Port of the relay's Prometheus metrics")
 	logLevel_ := flag.String("log-level", "debug", "Log level")
+=======
+	port_ := flag.Int("port", 0, "Port of the client")
+	promPort_ := flag.Int("promPort", 0, "Port of the relay's Prometheus metrics")
+	logLevel_ := flag.String("log-level", "info", "Log level")
+>>>>>>> 9e73b0dd5453d0594b67e7c3775902c3a8f2d98b
 
 	flag.Usage = func() {
 		if _, err := fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0]); err != nil {
@@ -45,6 +63,8 @@ func main() {
 	logLevel := *logLevel_
 
 	pl.SetUpLogrusAndSlog(logLevel)
+
+	stopNTC = utils.StartNTP()
 
 	// Check if the required flag is provided
 	if id == -1 {
@@ -97,7 +117,6 @@ func main() {
 
 	slog.Info("⚡ init newRelay", "id", id)
 
-	var newRelay *relay.Relay
 	// Attempt to create a new relay instance, retrying every 5 seconds upon failure (in case the bulletin board isn't ready yet).
 	for {
 		if n, err := relay.NewRelay(id, ip, port, promPort, config.GetBulletinBoardAddress()); err != nil {
@@ -119,7 +138,6 @@ func main() {
 	// Set up HTTP handlers
 	http.HandleFunc("/receive", newRelay.HandleReceiveOnion)
 	http.HandleFunc("/start", newRelay.HandleStartRun)
-	http.HandleFunc("/status", newRelay.HandleGetStatus)
 	http.HandleFunc("/shutdown", func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("Shutdown signal received")
 		quit <- os.Signal(syscall.SIGTERM) // signal shutdown
@@ -130,7 +148,6 @@ func main() {
 	})
 
 	// Serve Prometheus metrics in a separate goroutine.
-	shutdownMetrics := metrics.ServeMetrics(promPort, metrics.PROCESSING_TIME, metrics.ONION_COUNT, metrics.ONION_SIZE)
 
 	// Start the HTTP server
 	go func() {
@@ -148,11 +165,18 @@ func main() {
 	// Wait for either an OS signal to quit or the global context to be canceled
 	select {
 	case v := <-quit: // OS signal is received
-		config.GlobalCancel()
-		shutdownMetrics()
 		slog.Info("", "signal.Notify", v)
+		config.GlobalCancel()
+		cleanup()
 	case done := <-config.GlobalCtx.Done(): // global context is canceled
 		slog.Info("", "ctx.Done", done)
+		cleanup()
 	}
 
+}
+
+func cleanup() {
+	//shutdownMetrics()
+	newRelay.ShutdownMetrics()
+	stopNTC()
 }
