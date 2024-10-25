@@ -6,6 +6,8 @@ CONFIG_FILE="/home/Ismail/pi_t-experiment/config/config.yml"
 # Function to kill all processes started in the background
 terminate_processes() {
     echo "Terminating process..."
+    # If you're using an address for shutdown, uncomment the following line.
+    # sudo curl -X POST "$ADDRESS/shutdown" > /dev/null 2>&1
     sudo kill -9 $SCRIPT_PID
     exit 0
 }
@@ -14,18 +16,17 @@ terminate_processes() {
 trap "terminate_processes" SIGINT
 
 # Check if the correct number of parameters are provided
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <type> <id> <port>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <type> <id>"
     echo "Type should be 'client', 'relay', or 'bulletin_board'"
     exit 1
 fi
 
 type=$1
 id=$2
-port=$3
 
-# Print the type, ID, and port
-echo "Starting $type with ID: $id on port: $port"
+# Print the type and ID
+echo "Starting $type with ID: $id"
 
 # Find the root directory of the project by locating a known file or directory
 PROJECT_ROOT="$(sudo git rev-parse --show-toplevel 2>/dev/null)"
@@ -57,7 +58,7 @@ if [ "$type" = "bulletin_board" ]; then
     SCRIPT_PID=$!
 
 elif [ "$type" = "client" ]; then
-    echo "Starting client $id on port $port..."
+    echo "Starting client $id..."
 
     # Retrieve the bulletin board host from the config file
     BULLETIN_BOARD_HOST=$(sudo yq e ".bulletin_board.host" "$CONFIG_FILE")
@@ -67,12 +68,11 @@ elif [ "$type" = "client" ]; then
         exit 1
     fi
 
-    # Start the client process in the background with the bulletin board host and port
-    sudo go run cmd/client/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" -port="$port" &
+    # Start the client process in the background with the bulletin board host
+    sudo go run cmd/client/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" &
     SCRIPT_PID=$!
-
 elif [ "$type" = "relay" ]; then
-    echo "Starting relay $id on port $port..."
+    echo "Starting relay $id..."
 
     # Retrieve the bulletin board host from the config file
     BULLETIN_BOARD_HOST=$(sudo yq e ".bulletin_board.host" "$CONFIG_FILE")
@@ -82,10 +82,9 @@ elif [ "$type" = "relay" ]; then
         exit 1
     fi
 
-    # Start the relay process in the background with the bulletin board host and port
-    sudo go run cmd/relay/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" -port="$port" &
+    # Start the relay process in the background with the bulletin board host
+    sudo go run cmd/relay/main.go -id "$id" -host="$BULLETIN_BOARD_HOST" &
     SCRIPT_PID=$!
-
 else
     echo "Invalid type: $type. Must be 'client', 'relay', or 'bulletin_board'."
     exit 1
