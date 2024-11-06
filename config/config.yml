@@ -10,7 +10,7 @@ chi: 1.0      # Fraction of corrupted relays (which perform no mixing)
 dropAllOnionsFromClient: 1 # Client ID to drop all onions from
 vis: true     # Visualize the network
 scrapeInterval: 15 # Prometheus scrape interval in seconds
-prometheusPath: '/opt/homebrew/bin/prometheus'
+prometheusPath: '/usr/bin/prometheus'
 bulletin_board:
   host: 'localhost'
   port: 8080
