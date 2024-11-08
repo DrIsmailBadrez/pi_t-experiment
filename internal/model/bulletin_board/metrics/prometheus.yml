@@ -1,0 +1,67 @@
+global:
+    scrape_interval: 15s
+    external_labels:
+        monitor: pi_t
+scrape_configs:
+    - job_name: client-6
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61464
+    - job_name: client-1
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61436
+    - job_name: client-2
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61441
+    - job_name: client-3
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61446
+    - job_name: client-4
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61454
+    - job_name: client-5
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61459
+    - job_name: relay-6
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61494
+    - job_name: relay-1
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61469
+    - job_name: relay-2
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61474
+    - job_name: relay-3
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61479
+    - job_name: relay-4
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61484
+    - job_name: relay-5
+      scrape_interval: 5s
+      static_configs:
+        - targets:
+            - localhost:61489
+rule_files:
+    - /Users/hanma/Documents/GitHub/pi_t-experiment/internal/model/bulletin_board/metrics/rules.yml

@@ -50,4 +50,3 @@ out/*
 
 **/lastRegisteredClientsRelays.yml
 config/lastRegisteredClientsRelays.yml
-internal/model/bulletin_board/metrics/prometheus.yml
