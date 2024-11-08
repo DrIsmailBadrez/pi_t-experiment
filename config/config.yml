@@ -12,6 +12,6 @@ vis: true     # Visualize the network
 scrapeInterval: 15 # Prometheus scrape interval in seconds
 prometheusPath: '/usr/bin/prometheus'
 bulletin_board:
-  host: '128.110.219.28'
+  host: '128.110.219.32'
   port: 8080
   promPort: 8200 # where aggregated prometheus metrics are served from
