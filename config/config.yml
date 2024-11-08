@@ -1,4 +1,4 @@
-N: 1000 # minimum number of clients before running protocol
+N: 800 # minimum number of clients before running protocol
 n: 100 # minimum number of relays before running protocol
 l1: 3         # Number of planned mixers in a routing path
 l2: 2         # Number of planned gatekeepers in a routing path
